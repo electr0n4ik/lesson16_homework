@@ -63,7 +63,7 @@ try:
             db.session.add(user_class)
         db.session.commit()
 except:
-    print("id повторяются, поэтому таблица User не наполняется")
+    print("Таблица уже создана, или ошибка!")
 
 orders = get_json_file("orders.json")
 try:
@@ -85,20 +85,20 @@ try:
             db.session.add(order_class)
         db.session.commit()
 except:
-    print("id повторяются, поэтому таблица Order не наполняется")
+    print("Таблица уже создана, или ошибка!")
 
 offers = get_json_file("offers.json")
-# try:
-for i in offers:
-    offer_class = Offer(
-        id=i["id"],
-        order_id=i["order_id"],
-        executor_id=i["executor_id"])
+try:
+    for i in offers:
+        offer_class = Offer(
+            id=i["id"],
+            order_id=i["order_id"],
+            executor_id=i["executor_id"])
 
-    with db.session.begin():
-        db.session.add(offer_class)
+        with db.session.begin():
+            db.session.add(offer_class)
 
-    db.session.commit()
-# except:
-#     print("id повторяются, поэтому таблица Offer не наполняется")
+        db.session.commit()
+except:
+    print("Таблица уже создана, или ошибка!")
 
