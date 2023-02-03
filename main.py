@@ -32,8 +32,7 @@ def get_all_users():
     result = []
     con = sqlite3.connect("lesson16.db")
     cur = con.cursor()
-    sqlite_query = ("""SELECT *
-                    FROM user""")
+    sqlite_query = """SELECT * FROM user"""
     cur.execute(sqlite_query)
     users = cur.fetchall()
     con.close()
@@ -57,6 +56,70 @@ def get_user_by_id(user_id):
     con.close()
 
     return jsonify(user)
+
+
+@app.route("/orders")
+def get_all_orders():
+
+    result = []
+    con = sqlite3.connect("lesson16.db")
+    cur = con.cursor()
+    sqlite_query = """SELECT * FROM `order`"""
+    cur.execute(sqlite_query)
+    orders = cur.fetchall()
+    con.close()
+
+    return jsonify(orders)
+
+
+@app.route("/orders/<order_id>")
+def get_order_by_id(order_id):
+
+    result = []
+    con = sqlite3.connect("lesson16.db")
+    cur = con.cursor()
+    sqlite_query = f"""SELECT *
+                    FROM `order`
+                    WHERE id 
+                    LIKE {int(order_id)}
+                    """
+    cur.execute(sqlite_query)
+    order = cur.fetchall()
+    con.close()
+
+    return jsonify(order)
+
+
+@app.route("/offers")
+def get_all_offers():
+
+    result = []
+    con = sqlite3.connect("lesson16.db")
+    cur = con.cursor()
+    sqlite_query = """SELECT * FROM offer"""
+    cur.execute(sqlite_query)
+    offers = cur.fetchall()
+    con.close()
+
+    return jsonify(offers)
+
+
+@app.route("/offers/<offer_id>")
+def get_offer_by_id(offer_id):
+
+    result = []
+    con = sqlite3.connect("lesson16.db")
+    cur = con.cursor()
+    sqlite_query = f"""SELECT *
+                    FROM offer
+                    WHERE id 
+                    LIKE {int(offer_id)}
+                    """
+    cur.execute(sqlite_query)
+    offer = cur.fetchall()
+    con.close()
+
+    return jsonify(offer)
 
 
 if __name__ == '__main__':
