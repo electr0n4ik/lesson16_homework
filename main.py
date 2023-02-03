@@ -3,6 +3,33 @@ from flask_sqlalchemy import SQLAlchemy
 import prettytable
 import sqlite3
 
+def get_route_all(name_table):
+    result = []
+    con = sqlite3.connect("lesson16.db")
+    cur = con.cursor()
+    sqlite_query = f"""SELECT * FROM `{name_table}`"""
+    cur.execute(sqlite_query)
+    result = cur.fetchall()
+    con.close()
+
+    return jsonify(result)
+
+
+def get_route_by_id(table_name, name_id):
+    result = []
+    con = sqlite3.connect("lesson16.db")
+    cur = con.cursor()
+    sqlite_query = f"""SELECT *
+                        FROM `{table_name}`
+                        WHERE id 
+                        LIKE {int(name_id)}
+                        """
+    cur.execute(sqlite_query)
+    cur_f = cur.fetchall()
+    con.close()
+
+    return jsonify(cur_f)
+
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///lesson16.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
@@ -29,97 +56,37 @@ def internal_server_error(error):
 @app.route("/users")
 def get_all_users():
 
-    result = []
-    con = sqlite3.connect("lesson16.db")
-    cur = con.cursor()
-    sqlite_query = """SELECT * FROM user"""
-    cur.execute(sqlite_query)
-    users = cur.fetchall()
-    con.close()
-
-    return jsonify(users)
+    return get_route_all("user")
 
 
 @app.route("/users/<user_id>")
 def get_user_by_id(user_id):
 
-    result = []
-    con = sqlite3.connect("lesson16.db")
-    cur = con.cursor()
-    sqlite_query = f"""SELECT *
-                    FROM user
-                    WHERE id 
-                    LIKE {int(user_id)}
-                    """
-    cur.execute(sqlite_query)
-    user = cur.fetchall()
-    con.close()
-
-    return jsonify(user)
+    return get_route_by_id("user", user_id)
 
 
 @app.route("/orders")
 def get_all_orders():
 
-    result = []
-    con = sqlite3.connect("lesson16.db")
-    cur = con.cursor()
-    sqlite_query = """SELECT * FROM `order`"""
-    cur.execute(sqlite_query)
-    orders = cur.fetchall()
-    con.close()
-
-    return jsonify(orders)
+    return get_route_all('order')
 
 
 @app.route("/orders/<order_id>")
 def get_order_by_id(order_id):
 
-    result = []
-    con = sqlite3.connect("lesson16.db")
-    cur = con.cursor()
-    sqlite_query = f"""SELECT *
-                    FROM `order`
-                    WHERE id 
-                    LIKE {int(order_id)}
-                    """
-    cur.execute(sqlite_query)
-    order = cur.fetchall()
-    con.close()
-
-    return jsonify(order)
+    return get_route_by_id("order", order_id)
 
 
 @app.route("/offers")
 def get_all_offers():
 
-    result = []
-    con = sqlite3.connect("lesson16.db")
-    cur = con.cursor()
-    sqlite_query = """SELECT * FROM offer"""
-    cur.execute(sqlite_query)
-    offers = cur.fetchall()
-    con.close()
-
-    return jsonify(offers)
+    return get_route_all("offer")
 
 
 @app.route("/offers/<offer_id>")
 def get_offer_by_id(offer_id):
 
-    result = []
-    con = sqlite3.connect("lesson16.db")
-    cur = con.cursor()
-    sqlite_query = f"""SELECT *
-                    FROM offer
-                    WHERE id 
-                    LIKE {int(offer_id)}
-                    """
-    cur.execute(sqlite_query)
-    offer = cur.fetchall()
-    con.close()
-
-    return jsonify(offer)
+    return get_route_by_id("offer", offer_id)
 
 
 if __name__ == '__main__':
