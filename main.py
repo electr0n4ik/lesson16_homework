@@ -71,6 +71,7 @@ def internal_server_error(error):
 @app.route("/users", methods=["GET", "POST"])
 def add_user():
     try:
+
         list_rows = request.values["list_rows"].strip().split("\r\n")
 
         user_class = User(
@@ -116,8 +117,6 @@ def get_all_offers():
 def get_offer_by_id(offer_id):
 
     return get_route_by_id("offer", offer_id)
-
-
 
 
 if __name__ == '__main__':
