@@ -1,22 +1,17 @@
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 import prettytable
-from users import users
-from orders import orders
-from offers import offers
 import datetime
-
-def get_date(str):
-    list_str = str.split("/")
-    join_str = "-".join(list_str)
-    # int_to_str = int(join_str)
-    date_ = datetime.date(join_str)
-    return date_
+import json
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///lesson16.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db: SQLAlchemy = SQLAlchemy(app)
+
+def get_json_file(path):
+    with open(path, encoding="utf-8") as file:
+        return json.load(file)
 
 class User(db.Model):
     __tablename__ = "user"
@@ -52,7 +47,7 @@ class Offer(db.Model):
 
 
 db.create_all()
-
+users = get_json_file("users.json")
 try:
     for i in users:
         user_class = User(
@@ -70,27 +65,29 @@ try:
 except:
     print("id повторяются, поэтому таблица User не наполняется")
 
+orders = get_json_file("orders.json")
+try:
+    for i in orders:
+        start_date_list = i['start_date'].split("/")
+        end_date_list = i['end_date'].split("/")
+        order_class = Order(
+            id=int(i['id']),
+            name=i['name'],
+            description=i['description'],
+            start_date=datetime.date(int(start_date_list[2]), int(start_date_list[0]), int(start_date_list[1])),
+            end_date=datetime.date(int(end_date_list[2]), int(end_date_list[0]), int(end_date_list[1])),
+            address=" ".join(i['address'].split("\n")),
+            price=int(i['price']),
+            customer_id=int(i['customer_id']),
+            executor_id=int(i['executor_id']))
 
-# try:
-for i in orders:
-    order_class = Order(
-        id=int(i['id']),
-        name=i['name'],
-        description=i['description'],
-        start_date=get_date(i['start_date']),
-        end_date=i['end_date'],
-        address=i['address'],
-        price=int(i['price']),
-        customer_id=int(i['customer_id']),
-        executor_id=int(i['executor_id']))
+        with db.session.begin():
+            db.session.add(order_class)
+        db.session.commit()
+except:
+    print("id повторяются, поэтому таблица Order не наполняется")
 
-    with db.session.begin():
-        db.session.add(order_class)
-    db.session.commit()
-# except:
-#     print("id повторяются, поэтому таблица Order не наполняется")
-
-
+offers = get_json_file("offers.json")
 try:
     for i in offers:
         offer_class = Offer(
