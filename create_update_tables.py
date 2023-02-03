@@ -46,7 +46,7 @@ class Offer(db.Model):
     executor = db.relationship("User")
 
 
-db.create_all()
+# db.create_all()
 users = get_json_file("users.json")
 try:
     for i in users:

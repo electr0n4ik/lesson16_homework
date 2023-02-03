@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Добавить</title>
+</head>
+<body>
+<main>
+<form action="/users" method="post">
+    <body>
+
+    <div>
+        <h1>Пользователи в базе данных</h1>
+        {% for user in text_main %}
+            <p>{{ user }}</p>
+        {% endfor %}
+    </div>
+    <div>
+        <h3>Создать пользователя</h3>
+        <p>Одно значение в одну строку</p>
+
+        <p><textarea rows="7" cols="30" name="list_rows">
+Имя
+Фамилия
+Возраст
+Почта
+Роль
+Номер телефона
+        </textarea></p>
+        <input type="submit" value="ДОБАВИТЬ" class="button" name="list_rows">
+    </div>
+
+    </body>
+
+
+
+</form>
+</main>
+</body>
+</html>
