@@ -88,17 +88,17 @@ except:
     print("id повторяются, поэтому таблица Order не наполняется")
 
 offers = get_json_file("offers.json")
-try:
-    for i in offers:
-        offer_class = Offer(
-            id=i["id"],
-            order_id=i["order_id"],
-            executor_id=["executor_id"])
+# try:
+for i in offers:
+    offer_class = Offer(
+        id=i["id"],
+        order_id=i["order_id"],
+        executor_id=i["executor_id"])
 
-        with db.session.begin():
-            db.session.add(offer_class)
+    with db.session.begin():
+        db.session.add(offer_class)
 
-        db.session.commit()
-except:
-    print("id повторяются, поэтому таблица Offer не наполняется")
+    db.session.commit()
+# except:
+#     print("id повторяются, поэтому таблица Offer не наполняется")
 
