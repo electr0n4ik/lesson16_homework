@@ -1,0 +1,45 @@
+{#!DOCTYPE html>#}
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Обновить</title>
+</head>
+<body>
+<main>
+    <form action="/users/{{ user_id }}" method="post">
+         <div>
+            <h1>Пользователь из базы данных</h1>
+
+
+             <p>id: {{ user.id }}</p>
+             <p>Имя: {{ user.first_name }}</p>
+             <p>Фамилия: {{ user.second_name }}</p>
+             <p>Возраст: {{ user.age }}</p>
+             <p>email: {{ user.email }}</p>
+             <p>Роль: {{ user.role }}</p>
+             <p>Номер телефона: {{ user.phone }}</p>
+
+
+         </div>
+    </form>
+    <form action="/users/{{ user_id }}" method="get">
+        <div>
+        <hr>
+        <p><textarea rows="7" cols="30" name="upd_user">
+Имя_новое
+Фамилия_новое
+Возраст_новое
+Почта_новое
+Роль_новое
+Номер телефона_новое
+        </textarea>
+        </p>
+        <p>
+            <input type="submit" value="ОБНОВИТЬ" class="button" name="upd_user">
+        </p>
+    </div>
+    </form>
+
+</main>
+</body>
+</html>

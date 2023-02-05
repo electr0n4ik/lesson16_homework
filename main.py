@@ -1,12 +1,10 @@
+import sqlite3
+
+from create_update_tables import User
 from flask import Flask, jsonify, request, render_template
 from flask_sqlalchemy import SQLAlchemy
-import prettytable
-import sqlite3
-from create_update_tables import User
-
 
 def get_route_all(name_table):
-    result = []
     con = sqlite3.connect("lesson16.db")
     cur = con.cursor()
     sqlite_query = f"""SELECT * FROM `{name_table}`"""
@@ -18,19 +16,19 @@ def get_route_all(name_table):
 
 
 def get_route_by_id(table_name, name_id):
-    result = []
+
     con = sqlite3.connect("lesson16.db")
     cur = con.cursor()
     sqlite_query = f"""SELECT *
-                        FROM `{table_name}`
-                        WHERE id 
-                        LIKE {int(name_id)}
-                        """
+    FROM `{table_name}`
+    WHERE id 
+    LIKE {int(name_id)}
+    """
     cur.execute(sqlite_query)
     cur_f = cur.fetchall()
     con.close()
 
-    return jsonify(cur_f)
+    return cur_f
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///lesson16.db'
@@ -69,11 +67,19 @@ def internal_server_error(error):
 #     return render_template("users_main.html", text_main = get_route_all("user"))
 
 @app.route("/users", methods=["GET", "POST"])
-def add_user():
+def manipulation_user():
     try:
-
+        try:
+            del_user = request.values["del_user"]
+            if del_user > 0:
+                user_del = User.query.get(int(del_user))
+                db.session.delete(user_del)
+                db.session.commit()
+                return render_template("users_main.html", text_main=get_route_all("user"))
+        except:
+            return render_template("users_main.html", text_main=get_route_all("user"))
+    except:
         list_rows = request.values["list_rows"].strip().split("\r\n")
-
         user_class = User(
             first_name=list_rows[0],
             last_name=list_rows[1],
@@ -81,18 +87,36 @@ def add_user():
             email=list_rows[3],
             role=list_rows[4],
             phone=list_rows[5])
-
         with db.session.begin():
             db.session.add(user_class)
         db.session.commit()
         return render_template("users_main.html", text_main=get_route_all("user"))
-    except:
-        return render_template("users_main.html", text_main = get_route_all("user"))
 
-@app.route("/users/<user_id>")
+
+@app.route("/users/<user_id>", methods=["GET"])#, "PUT"])
 def get_user_by_id(user_id):
-
-    return get_route_by_id("user", user_id)
+    # response_put = request.put(f"http://127.0.0.1:5000/users/{user_id}",
+    #                            jsonify(get_route_by_id("user", user_id)))
+    # try:
+    #
+    #     response_put = request.values["upd_user"].strip().split("\r\n")
+    #     upd_user_class = User(
+    #         first_name=response_put[0],
+    #         last_name=response_put[1],
+    #         age=response_put[2],
+    #         email=response_put[3],
+    #         role=response_put[4],
+    #         phone=response_put[5])
+    #     with db.session.begin():
+    #         db.session.add(upd_user_class)
+    #     db.session.commit()
+    #     return render_template("upd_user.html",
+    #                            user=get_route_by_id("user", user_id),
+    #                            user_id=user_id)
+    # except:
+    return render_template("upd_user.html",
+                           user=get_route_by_id("user", user_id),
+                           user_id=user_id)
 
 
 @app.route("/orders")
