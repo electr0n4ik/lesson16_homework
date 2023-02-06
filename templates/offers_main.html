@@ -6,27 +6,23 @@
 </head>
 <body>
 <main>
-<form action="/users" method="post">
+<form action="/offers" method="post">
     <body>
 
     <div>
-        <h1>Пользователи в базе данных</h1>
-        {% for user in text_main %}
-            <p>{{ user }}</p>
+        <h1>База исполнителей</h1>
+        {% for offer in text_main %}
+            <p>{{ offer }}</p>
         {% endfor %}
     </div>
     <hr>
     <div>
-        <h3>Создать пользователя</h3>
+        <h3>Создать предложение</h3>
         <p>Одно значение в одну строку</p>
 
-        <p><textarea rows="7" cols="30" name="list_rows">
-Имя
-Фамилия
-Возраст
-Почта
-Роль
-Номер телефона
+        <p><textarea rows="4" cols="20" name="list_rows">
+Номер заказа
+Номер исполнителя
         </textarea></p>
         <input type="submit" value="ДОБАВИТЬ" class="button" name="list_rows">
     </div>
